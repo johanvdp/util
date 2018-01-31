@@ -1,2 +1,3 @@
 # util
-utility classes
+Each project needs some basic to make life easier
+
