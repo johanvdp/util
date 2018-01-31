@@ -1,3 +1,4 @@
+// The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
 import nl.jvdploeg.limit.Limits;

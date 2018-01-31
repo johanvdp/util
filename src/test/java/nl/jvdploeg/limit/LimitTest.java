@@ -1,3 +1,4 @@
+// The author disclaims copyright to this source code.
 package nl.jvdploeg.limit;
 
 import java.util.function.Predicate;

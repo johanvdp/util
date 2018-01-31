@@ -1,3 +1,4 @@
+// The author disclaims copyright to this source code.
 package nl.jvdploeg.context;
 
 import nl.jvdploeg.exception.ErrorBuilder;
