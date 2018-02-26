@@ -20,12 +20,13 @@ public abstract class Context<T> {
   }
 
   private static Context findContext(final Context inner, final Class target) {
-    if (inner != null) {
-      if (inner.getClass().equals(target)) {
-        return inner;
-      } else if (inner.parent != null) {
-        return getContext(inner.parent, target);
-      }
+    if (inner != null //
+        && target != null //
+        && target.isAssignableFrom(inner.getClass())) {
+      return inner;
+    }
+    if (inner != null && inner.parent != null) {
+      return getContext(inner.parent, target);
     }
     return null;
   }
@@ -36,6 +37,7 @@ public abstract class Context<T> {
       throw new IllegalArgumentExceptionBuilder() //
           .method("getContext") //
           .message("enclosing context type not found") //
+          .field("thread", Thread.currentThread().getName()) //
           .field("target", target.getSimpleName()) //
           .build();
     }
@@ -54,6 +56,7 @@ public abstract class Context<T> {
       throw new ErrorBuilder() //
           .method("enter") //
           .message("can not enter again") //
+          .field("thread", Thread.currentThread().getName()) //
           .field("class", getClass().getSimpleName()) //
           .build();
     }
@@ -65,10 +68,19 @@ public abstract class Context<T> {
   /** Exit context. Must be called from sub-classes when overridden. */
   public void exit() {
     final Context inner = INNER.get();
+    if (inner == null) {
+      throw new IllegalStateExceptionBuilder() //
+          .method("exit") //
+          .message("no current context") //
+          .field("thread", Thread.currentThread().getName()) //
+          .field("requested", getClass().getSimpleName()) //
+          .build();
+    }
     if (!inner.getClass().equals(getClass())) {
       throw new IllegalStateExceptionBuilder() //
           .method("exit") //
           .message("can only exit from current context") //
+          .field("thread", Thread.currentThread().getName()) //
           .field("requested", getClass().getSimpleName()) //
           .field("current", inner.getClass().getSimpleName()) //
           .build();
