@@ -23,11 +23,8 @@ public abstract class NullSafe {
   }
 
   public static boolean equals(final Object one, final Object other) {
-    if (one == other) {
-      return true;
-    }
     if (one == null) {
-      return false;
+      return other == null;
     }
     return one.equals(other);
   }
@@ -44,6 +41,10 @@ public abstract class NullSafe {
       return 0;
     }
     return object.hashCode();
+  }
+
+  public static String toString(final Object value) {
+    return value == null ? "null" : value.toString();
   }
 
   private NullSafe() {

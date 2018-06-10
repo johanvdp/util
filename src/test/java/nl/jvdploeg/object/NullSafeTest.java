@@ -39,4 +39,10 @@ public class NullSafeTest {
     Assert.assertEquals(0, NullSafe.hashCode(NULL));
     Assert.assertEquals(VALUE.hashCode(), NullSafe.hashCode(VALUE));
   }
+
+  @Test
+  public void testToString() {
+    Assert.assertEquals("null", NullSafe.toString(NULL));
+    Assert.assertEquals("other", NullSafe.toString("other"));
+  }
 }
