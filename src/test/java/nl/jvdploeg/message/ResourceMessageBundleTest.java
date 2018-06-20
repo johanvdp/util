@@ -7,15 +7,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MessageUtilsTest {
+public class ResourceMessageBundleTest {
 
-  private MessageBundle utils;
+  private ResourceMessageBundle utils;
   private ResourceBundle bundle;
 
   @Before
   public void before() {
     bundle = ResourceBundle.getBundle("nl.jvdploeg.message.TestBundle", new Locale("nl"));
-    utils = new MessageBundle(bundle);
+    utils = new ResourceMessageBundle(bundle);
   }
 
   @Test
