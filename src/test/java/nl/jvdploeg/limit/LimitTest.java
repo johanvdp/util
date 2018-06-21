@@ -7,6 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import nl.jvdploeg.message.Message;
+import nl.jvdploeg.message.MessageBuilder;
+import nl.jvdploeg.message.MessageBundleContext;
+
 public class LimitTest {
 
   private Limit<String, Integer> limit;
@@ -14,16 +18,21 @@ public class LimitTest {
   @Before
   public void before() {
     final Predicate<String> predicate = t -> t.length() > 3;
-    limit = new Limit<>("name", Integer.valueOf(3), predicate, "%1$s %2$s %3$d");
+    final Message message = new MessageBuilder("{name} {value} {limit}").build();
+    limit = new Limit<>("name", Integer.valueOf(3), predicate, message);
   }
 
   @Test
   public void testPredicateFalse() {
-    Assert.assertEquals("name aaa 3", limit.check("aaa"));
+    Assert.assertEquals("name aaa 3", toString(limit.check("aaa")));
   }
 
   @Test
   public void testPredicateTrue() {
     Assert.assertEquals(null, limit.check("aaaa"));
+  }
+
+  private String toString(final Message message) {
+    return MessageBundleContext.aware(message);
   }
 }

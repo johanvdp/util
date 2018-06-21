@@ -1,6 +1,9 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.limit;
 
+import nl.jvdploeg.message.Message;
+import nl.jvdploeg.message.MessageBuilder;
+
 public final class Limits {
 
   private Limits() {
@@ -11,67 +14,67 @@ public final class Limits {
    *
    * @see #check(Object)
    */
-  private static final String DOUBLE_GE = "%1$s (%2$f) should be greater than or equal to %3$f";
+  private static final Message DOUBLE_GE = new MessageBuilder("{name} ({value}) should be greater than or equal to {limit}").build();
   /**
    * String double &gt; limit message format.
    *
    * @see #check(Object)
    */
-  private static final String DOUBLE_GT = "%1$s (%2$f) should be greater than %3$f";
+  private static final Message DOUBLE_GT = new MessageBuilder("{name} ({value}) should be greater than {limit}").build();
   /**
    * String double &lt;= limit message format.
    *
    * @see #check(Object)
    */
-  private static final String DOUBLE_LE = "%1$s (%2$f) should be less than or equal to %3$f";
+  private static final Message DOUBLE_LE = new MessageBuilder("{name} ({value}) should be less than or equal to {limit}").build();
   /**
    * String double &lt; limit message format.
    *
    * @see #check(Object)
    */
-  private static final String DOUBLE_LT = "%1$s (%2$f) should be less than %3$f";
+  private static final Message DOUBLE_LT = new MessageBuilder("{name} ({value}) should be less than {limit}").build();
   /**
    * String number &gt;= limit message format.
    *
    * @see #check(Object)
    */
-  private static final String INTEGER_GE = "%1$s (%2$d) should be greater than or equal to %3$d";
+  private static final Message INTEGER_GE = new MessageBuilder("{name} ({value}) should be greater than or equal to {limit}").build();
   /**
    * String number &gt; limit message format.
    *
    * @see #check(Object)
    */
-  private static final String INTEGER_GT = "%1$s (%2$d) should be greater than %3$d";
+  private static final Message INTEGER_GT = new MessageBuilder("{name} ({value}) should be greater than {limit}").build();
   /**
    * String number &lt;= limit message format.
    *
    * @see #check(Object)
    */
-  private static final String INTEGER_LE = "%1$s (%2$d) should be less than or equal to %3$d";
+  private static final Message INTEGER_LE = new MessageBuilder("{name} ({value}) should be less than or equal to {limit}").build();
   /**
    * String number &lt; limit message format.
    *
    * @see #check(Object)
    */
-  private static final String INTEGER_LT = "%1$s (%2$d) should be less than %3$d";
+  private static final Message INTEGER_LT = new MessageBuilder("{name} ({value}) should be less than {limit}").build();
   /**
    * String maximum length limit message format.
    *
    * @see #check(Object)
    */
-  private static final String STRING_MAXLENGTH = "%1$s (%2$s) length should be less than or equal to %3$d";
+  private static final Message STRING_MAXLENGTH = new MessageBuilder("{name} ({value}) length should be less than or equal to {limit}").build();
   /**
    * String minimum length limit message format.
    *
    * @see #check(Object)
    */
-  private static final String STRING_MINLENGTH = "%1$s (%2$s) length should be greater than or equal to %3$d";
+  private static final Message STRING_MINLENGTH = new MessageBuilder("{name} ({value}) length should be greater than or equal to {limit}").build();
   /**
    * String pattern limit message format.
    *
    * @see #check(Object)
    */
-  private static final String STRING_PATTERN = "%1$s (%2$s) pattern should match %3$s";
+  private static final Message STRING_PATTERN = new MessageBuilder("{name} ({value}) pattern should match {limit}").build();
 
   public static Limit<Double, Double> ge(final String name, final Double limit) {
     return new Limit<>(name, limit, f -> (f.doubleValue() >= limit.doubleValue()), DOUBLE_GE);

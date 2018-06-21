@@ -1,6 +1,7 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.message;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -23,5 +24,10 @@ public final class ResourceMessageBundle extends AbstractMessageBundle {
   @Override
   protected String getString(final String key) {
     return bundle.getString(key);
+  }
+
+  @Override
+  protected Locale getLocale() {
+    return bundle.getLocale();
   }
 }

@@ -1,6 +1,9 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
+import nl.jvdploeg.message.Message;
+import nl.jvdploeg.message.MessageBuilder;
+
 public class StateCheck extends LimitCheck {
 
   public StateCheck() {
@@ -8,7 +11,8 @@ public class StateCheck extends LimitCheck {
   }
 
   @Override
-  protected final void consequence(final String message) {
-    throw new IllegalStateException(message);
+  protected final void consequence(final Message message) {
+    final Message illegalStateMessage = new MessageBuilder("Illegal state.").build();
+    throw new MessageException(illegalStateMessage, message);
   }
 }

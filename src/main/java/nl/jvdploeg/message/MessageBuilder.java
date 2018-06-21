@@ -11,7 +11,7 @@ public final class MessageBuilder {
   private static final class DefaultMessage implements Message {
 
     private final String key;
-    private final Map<String, String> arguments = new HashMap<>();
+    private final Map<String, Object> arguments = new HashMap<>();
 
     DefaultMessage(final String key) {
       this.key = key;
@@ -23,7 +23,7 @@ public final class MessageBuilder {
     }
 
     @Override
-    public Map<String, String> getArguments() {
+    public Map<String, Object> getArguments() {
       return arguments;
     }
   }
@@ -32,7 +32,7 @@ public final class MessageBuilder {
     message = new DefaultMessage(messageKey);
   }
 
-  public MessageBuilder add(final String argumentKey, final String argumentValue) {
+  public MessageBuilder add(final String argumentKey, final Object argumentValue) {
     message.arguments.put(argumentKey, argumentValue);
     return this;
   }

@@ -21,6 +21,17 @@ public class MessageBundleContext extends Context<MessageBundle> implements Mess
     return messageBundle;
   }
 
+  public static final String aware(final Message... messages) {
+    final StringBuilder builder = new StringBuilder();
+    for (final Message message : messages) {
+      if (builder.length() > 0) {
+        builder.append('\n');
+      }
+      builder.append(aware(message));
+    }
+    return builder.toString();
+  }
+
   public static final String aware(final Message message) {
     MessageBundle messageBundle = null;
     try {

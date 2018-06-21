@@ -2,11 +2,14 @@
 package nl.jvdploeg.exception;
 
 import nl.jvdploeg.limit.Limits;
+import nl.jvdploeg.message.Message;
+import nl.jvdploeg.message.MessageBuilder;
+import nl.jvdploeg.object.NullSafe;
 
 public abstract class LimitCheck {
 
-  private static final String OBJECT_NULL = "%1$s should not be null";
-  private static final String OBJECT_UNEXPECTED = "%1$s %2$s is unexpected";
+  private static final String OBJECT_NULL = "{name} should not be null";
+  private static final String OBJECT_UNEXPECTED = "{name} {value} is unexpected";
 
   protected LimitCheck() {
   }
@@ -73,20 +76,26 @@ public abstract class LimitCheck {
 
   public final void notNull(final Object value, final String name) {
     if (value == null) {
-      consequence(String.format(OBJECT_NULL, name));
+      final Message message = new MessageBuilder(OBJECT_NULL) //
+          .add("name", name) //
+          .build();
+      consequence(message);
     }
   }
 
   public final void unexpected(final Object value, final String name) {
-    final String valueString = value == null ? "null" : value.toString();
-    consequence(String.format(OBJECT_UNEXPECTED, name, valueString));
+    final Message message = new MessageBuilder(OBJECT_UNEXPECTED) //
+        .add("name", name) //
+        .add("value", NullSafe.toString(value)) //
+        .build();
+    consequence(message);
   }
 
-  protected final void check(final String message) {
+  protected final void check(final Message message) {
     if (message != null) {
       consequence(message);
     }
   }
 
-  protected abstract void consequence(String message);
+  protected abstract void consequence(Message message);
 }
