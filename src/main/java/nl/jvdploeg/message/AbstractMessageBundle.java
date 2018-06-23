@@ -165,6 +165,21 @@ public abstract class AbstractMessageBundle implements MessageBundle {
   }
 
   /**
+   * Translate messages.
+   */
+  public final String[] translate(final Message... messages) {
+    final List<String> translated = new ArrayList<>();
+    if (messages != null) {
+      for (final Message message : messages) {
+        final String one = translate(message);
+        translated.add(one);
+      }
+    }
+    final String[] array = translated.toArray(new String[translated.size()]);
+    return array;
+  }
+
+  /**
    * Translate message.
    */
   @Override

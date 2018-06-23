@@ -1,8 +1,8 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
+import nl.jvdploeg.message.FallbackMessageBundle;
 import nl.jvdploeg.message.Message;
-import nl.jvdploeg.message.MessageBundleContext;
 
 public final class MessageException extends RuntimeException {
 
@@ -10,7 +10,7 @@ public final class MessageException extends RuntimeException {
   private final Message[] messages;
 
   public MessageException(final Message... messages) {
-    super(MessageBundleContext.aware(messages));
+    super(String.join("\n", FallbackMessageBundle.getInstance().translate(messages)));
     this.messages = messages;
   }
 
@@ -18,7 +18,7 @@ public final class MessageException extends RuntimeException {
     return messages;
   }
 
-  public MessageException create(final MessageException base, final Message detail) {
+  public static MessageException create(final MessageException base, final Message detail) {
     final int baseNumberOfMessages = base.messages.length;
     final Message[] newMessages = new Message[baseNumberOfMessages + 1];
     System.arraycopy(base.messages, 0, newMessages, 0, baseNumberOfMessages);

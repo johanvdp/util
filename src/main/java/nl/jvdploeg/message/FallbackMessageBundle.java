@@ -11,6 +11,12 @@ import java.util.Map.Entry;
  */
 public final class FallbackMessageBundle extends AbstractMessageBundle {
 
+  private static final FallbackMessageBundle INSTANCE = new FallbackMessageBundle();
+
+  public static FallbackMessageBundle getInstance() {
+    return INSTANCE;
+  }
+
   /**
    * Fragment of argument name and argument value.<br>
    * Example: x={x}
