@@ -1,8 +1,6 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.context;
 
-import nl.jvdploeg.exception.ErrorBuilder;
-import nl.jvdploeg.exception.IllegalArgumentExceptionBuilder;
 import nl.jvdploeg.exception.IllegalStateExceptionBuilder;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,7 +32,7 @@ public abstract class Context<T> {
   private static Context getContext(final Context inner, final Class target) {
     final Context context = findContext(inner, target);
     if (context == null) {
-      throw new IllegalArgumentExceptionBuilder() //
+      throw new IllegalStateExceptionBuilder() //
           .method("getContext") //
           .message("enclosing context type not found") //
           .field("thread", Thread.currentThread().getName()) //
@@ -53,7 +51,7 @@ public abstract class Context<T> {
   /** Enter context. Must be called from sub-classes when overridden. */
   public void enter() {
     if (findContext(INNER.get(), getClass()) != null) {
-      throw new ErrorBuilder() //
+      throw new IllegalStateExceptionBuilder() //
           .method("enter") //
           .message("can not enter again") //
           .field("thread", Thread.currentThread().getName()) //

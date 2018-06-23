@@ -22,12 +22,17 @@ public final class ResourceMessageBundle extends AbstractMessageBundle {
   }
 
   @Override
-  protected String getString(final String key) {
-    return bundle.getString(key);
+  protected Locale getLocale() {
+    return bundle.getLocale();
   }
 
   @Override
-  protected Locale getLocale() {
-    return bundle.getLocale();
+  protected String getString(final Message message) {
+    return bundle.getString(message.getKey());
+  }
+
+  @Override
+  protected String getString(final String key) {
+    return bundle.getString(key);
   }
 }

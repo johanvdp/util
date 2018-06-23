@@ -4,12 +4,14 @@ package nl.jvdploeg.exception;
 import nl.jvdploeg.limit.Limits;
 import nl.jvdploeg.message.Message;
 import nl.jvdploeg.message.MessageBuilder;
+import nl.jvdploeg.message.MessageDefinition;
 import nl.jvdploeg.object.NullSafe;
 
 public abstract class LimitCheck {
 
-  private static final String OBJECT_NULL = "{name} should not be null";
-  private static final String OBJECT_UNEXPECTED = "{name} {value} is unexpected";
+  private static final MessageDefinition SENTENCE_OBJECT_NULL = new MessageDefinition("object.null", "name");
+  private static final MessageDefinition SENTENCE_OBJECT_INVALID = new MessageDefinition("object.invalid", "name", "value");
+  private static final MessageDefinition SENTENCE_OBJECT_MISSING = new MessageDefinition("object.missing", "name", "value");
 
   protected LimitCheck() {
   }
@@ -36,6 +38,14 @@ public abstract class LimitCheck {
 
   public final void gt(final Long value, final String name, final Long limit) {
     check(Limits.gt(name, limit).check(value));
+  }
+
+  public final void invalid(final Object value, final String name) {
+    final Message message = new MessageBuilder(SENTENCE_OBJECT_INVALID) //
+        .add("name", name) //
+        .add("value", NullSafe.toString(value)) //
+        .build();
+    consequence(message);
   }
 
   public final void le(final Double value, final String name, final Double limit) {
@@ -74,21 +84,21 @@ public abstract class LimitCheck {
     check(Limits.minLength(name, limit).check(value));
   }
 
-  public final void notNull(final Object value, final String name) {
-    if (value == null) {
-      final Message message = new MessageBuilder(OBJECT_NULL) //
-          .add("name", name) //
-          .build();
-      consequence(message);
-    }
-  }
-
-  public final void unexpected(final Object value, final String name) {
-    final Message message = new MessageBuilder(OBJECT_UNEXPECTED) //
+  public final void missing(final Object value, final String name) {
+    final Message message = new MessageBuilder(SENTENCE_OBJECT_MISSING) //
         .add("name", name) //
         .add("value", NullSafe.toString(value)) //
         .build();
     consequence(message);
+  }
+
+  public final void notNull(final Object value, final String name) {
+    if (value == null) {
+      final Message message = new MessageBuilder(SENTENCE_OBJECT_NULL) //
+          .add("name", name) //
+          .build();
+      consequence(message);
+    }
   }
 
   protected final void check(final Message message) {

@@ -1,138 +1,120 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.limit;
 
-import nl.jvdploeg.message.Message;
-import nl.jvdploeg.message.MessageBuilder;
+import nl.jvdploeg.message.MessageDefinition;
 
 public final class Limits {
 
-  private Limits() {
-  }
+  /**
+   * Argument names common to all limit messages.Fs
+   */
+  private static final String[] LIMIT_ARGUMENT_NAMES = new String[] { "name", "value", "limit" };
 
   /**
-   * String double &gt;= limit message format.
+   * Value &gt;= limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message DOUBLE_GE = new MessageBuilder("{name} ({value}) should be greater than or equal to {limit}").build();
+  private static final MessageDefinition SENTENCE_GE = new MessageDefinition("should.be.greater.than.or.equal.to", LIMIT_ARGUMENT_NAMES);
+
   /**
-   * String double &gt; limit message format.
+   * Value &gt; limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message DOUBLE_GT = new MessageBuilder("{name} ({value}) should be greater than {limit}").build();
+  private static final MessageDefinition SENTENCE_GT = new MessageDefinition("should.be.greater.than", LIMIT_ARGUMENT_NAMES);
   /**
-   * String double &lt;= limit message format.
+   * Value &lt;= limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message DOUBLE_LE = new MessageBuilder("{name} ({value}) should be less than or equal to {limit}").build();
+  private static final MessageDefinition SENTENCE_LE = new MessageDefinition("should.be.less.than.or.equal.to", LIMIT_ARGUMENT_NAMES);
   /**
-   * String double &lt; limit message format.
+   * Value &lt; limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message DOUBLE_LT = new MessageBuilder("{name} ({value}) should be less than {limit}").build();
+  private static final MessageDefinition SENTENCE_LT = new MessageDefinition("should.be.less.than", LIMIT_ARGUMENT_NAMES);
   /**
-   * String number &gt;= limit message format.
+   * Value maximum length limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message INTEGER_GE = new MessageBuilder("{name} ({value}) should be greater than or equal to {limit}").build();
+  private static final MessageDefinition SENTENCE_MAXLENGTH = new MessageDefinition("length.should.be.less.than.or.equal.to", LIMIT_ARGUMENT_NAMES);
   /**
-   * String number &gt; limit message format.
+   * Value minimum length limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message INTEGER_GT = new MessageBuilder("{name} ({value}) should be greater than {limit}").build();
+  private static final MessageDefinition SENTENCE_MINLENGTH = new MessageDefinition("length.should.be.greater.than.or.equal.to",
+      LIMIT_ARGUMENT_NAMES);
   /**
-   * String number &lt;= limit message format.
+   * Value pattern limit message format.
    *
    * @see #check(Object)
    */
-  private static final Message INTEGER_LE = new MessageBuilder("{name} ({value}) should be less than or equal to {limit}").build();
-  /**
-   * String number &lt; limit message format.
-   *
-   * @see #check(Object)
-   */
-  private static final Message INTEGER_LT = new MessageBuilder("{name} ({value}) should be less than {limit}").build();
-  /**
-   * String maximum length limit message format.
-   *
-   * @see #check(Object)
-   */
-  private static final Message STRING_MAXLENGTH = new MessageBuilder("{name} ({value}) length should be less than or equal to {limit}").build();
-  /**
-   * String minimum length limit message format.
-   *
-   * @see #check(Object)
-   */
-  private static final Message STRING_MINLENGTH = new MessageBuilder("{name} ({value}) length should be greater than or equal to {limit}").build();
-  /**
-   * String pattern limit message format.
-   *
-   * @see #check(Object)
-   */
-  private static final Message STRING_PATTERN = new MessageBuilder("{name} ({value}) pattern should match {limit}").build();
+  private static final MessageDefinition SENTENCE_PATTERN = new MessageDefinition("pattern.should.match", LIMIT_ARGUMENT_NAMES);
 
   public static Limit<Double, Double> ge(final String name, final Double limit) {
-    return new Limit<>(name, limit, f -> (f.doubleValue() >= limit.doubleValue()), DOUBLE_GE);
+    return new Limit<>(name, limit, f -> (f.doubleValue() >= limit.doubleValue()), SENTENCE_GE);
   }
 
   public static Limit<Integer, Integer> ge(final String name, final Integer limit) {
-    return new Limit<>(name, limit, f -> (f.intValue() >= limit.intValue()), INTEGER_GE);
+    return new Limit<>(name, limit, f -> (f.intValue() >= limit.intValue()), SENTENCE_GE);
   }
 
   public static Limit<Long, Long> ge(final String name, final Long limit) {
-    return new Limit<>(name, limit, f -> (f.longValue() >= limit.longValue()), INTEGER_GE);
+    return new Limit<>(name, limit, f -> (f.longValue() >= limit.longValue()), SENTENCE_GE);
   }
 
   public static Limit<Double, Double> gt(final String name, final Double limit) {
-    return new Limit<>(name, limit, f -> (f.doubleValue() > limit.doubleValue()), DOUBLE_GT);
+    return new Limit<>(name, limit, f -> (f.doubleValue() > limit.doubleValue()), SENTENCE_GT);
   }
 
   public static Limit<Integer, Integer> gt(final String name, final Integer limit) {
-    return new Limit<>(name, limit, f -> (f.intValue() > limit.intValue()), INTEGER_GT);
+    return new Limit<>(name, limit, f -> (f.intValue() > limit.intValue()), SENTENCE_GT);
   }
 
   public static Limit<Long, Long> gt(final String name, final Long limit) {
-    return new Limit<>(name, limit, f -> (f.longValue() > limit.longValue()), INTEGER_GT);
+    return new Limit<>(name, limit, f -> (f.longValue() > limit.longValue()), SENTENCE_GT);
   }
 
   public static Limit<Double, Double> le(final String name, final Double limit) {
-    return new Limit<>(name, limit, f -> (f.doubleValue() <= limit.doubleValue()), DOUBLE_LE);
+    return new Limit<>(name, limit, f -> (f.doubleValue() <= limit.doubleValue()), SENTENCE_LE);
   }
 
   public static Limit<Integer, Integer> le(final String name, final Integer limit) {
-    return new Limit<>(name, limit, f -> (f.intValue() <= limit.intValue()), INTEGER_LE);
+    return new Limit<>(name, limit, f -> (f.intValue() <= limit.intValue()), SENTENCE_LE);
   }
 
   public static Limit<Long, Long> le(final String name, final Long limit) {
-    return new Limit<>(name, limit, f -> (f.longValue() <= limit.longValue()), INTEGER_LE);
+    return new Limit<>(name, limit, f -> (f.longValue() <= limit.longValue()), SENTENCE_LE);
   }
 
   public static Limit<Double, Double> lt(final String name, final Double limit) {
-    return new Limit<>(name, limit, f -> (f.doubleValue() < limit.doubleValue()), DOUBLE_LT);
+    return new Limit<>(name, limit, f -> (f.doubleValue() < limit.doubleValue()), SENTENCE_LT);
   }
 
   public static Limit<Integer, Integer> lt(final String name, final Integer limit) {
-    return new Limit<>(name, limit, f -> (f.intValue() < limit.intValue()), INTEGER_LT);
+    return new Limit<>(name, limit, f -> (f.intValue() < limit.intValue()), SENTENCE_LT);
   }
 
   public static Limit<Long, Long> lt(final String name, final Long limit) {
-    return new Limit<>(name, limit, f -> (f.longValue() < limit.longValue()), INTEGER_LT);
+    return new Limit<>(name, limit, f -> (f.longValue() < limit.longValue()), SENTENCE_LT);
   }
 
   public static Limit<String, String> matches(final String name, final String pattern) {
-    return new Limit<>(name, pattern, f -> f.matches(pattern), STRING_PATTERN);
+    return new Limit<>(name, pattern, f -> f.matches(pattern), SENTENCE_PATTERN);
   }
 
   public static Limit<String, Integer> maxLength(final String name, final Integer limit) {
-    return new Limit<>(name, limit, f -> (f.length() <= limit.intValue()), STRING_MAXLENGTH);
+    return new Limit<>(name, limit, f -> (f.length() <= limit.intValue()), SENTENCE_MAXLENGTH);
   }
 
   public static Limit<String, Integer> minLength(final String name, final Integer limit) {
-    return new Limit<>(name, limit, f -> (f.length() >= limit.intValue()), STRING_MINLENGTH);
+    return new Limit<>(name, limit, f -> (f.length() >= limit.intValue()), SENTENCE_MINLENGTH);
+  }
+
+  private Limits() {
   }
 }

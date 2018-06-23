@@ -1,8 +1,13 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+
+import nl.jvdploeg.limit.Limits;
+import nl.jvdploeg.message.MessageBundleContext;
 
 public class ArgumentCheckTest {
 
@@ -16,13 +21,26 @@ public class ArgumentCheckTest {
   private static final Integer INTEGER = Integer.valueOf(2);
   private static final Integer INTEGER_LESS = Integer.valueOf(1);
 
+  private MessageBundleContext context;
+
+  @Before
+  public void before() {
+    context = new MessageBundleContext(Limits.class, ArgumentCheck.class, LimitCheck.class, StateCheck.class);
+    context.enter();
+  }
+
+  @After
+  public void after() {
+    context.exit();
+  }
+
   @Test
   public void testGeDouble() {
     try {
       Checks.ARGUMENT.ge(DOUBLE_LESS, "X", DOUBLE);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (1.0) should be greater than or equal to 2.0", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (1.0) should be greater than or equal to 2.0.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.ge(DOUBLE, "X", DOUBLE);
@@ -42,7 +60,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.ge(INTEGER_LESS, "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (1) should be greater than or equal to 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (1) should be greater than or equal to 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.ge(INTEGER, "X", INTEGER);
@@ -62,7 +80,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.ge(LONG_LESS, "X", LONG);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (1) should be greater than or equal to 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (1) should be greater than or equal to 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.ge(LONG, "X", LONG);
@@ -82,7 +100,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.gt(DOUBLE_LESS, "X", DOUBLE);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (1.0) should be greater than 2.0", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (1.0) should be greater than 2.0.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.gt(DOUBLE, "X", DOUBLE);
@@ -102,7 +120,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.gt(INTEGER_LESS, "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (1) should be greater than 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (1) should be greater than 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.gt(INTEGER, "X", INTEGER);
@@ -122,7 +140,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.gt(LONG_LESS, "X", LONG);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (1) should be greater than 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (1) should be greater than 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.gt(LONG, "X", LONG);
@@ -152,7 +170,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.le(DOUBLE_GREATER, "X", DOUBLE);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (3.0) should be less than or equal to 2.0", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (3.0) should be less than or equal to 2.0.", e.getMessage());
     }
   }
 
@@ -172,7 +190,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.le(INTEGER_GREATER, "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (3) should be less than or equal to 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (3) should be less than or equal to 2.", e.getMessage());
     }
   }
 
@@ -192,7 +210,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.le(LONG_GREATER, "X", LONG);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (3) should be less than or equal to 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (3) should be less than or equal to 2.", e.getMessage());
     }
   }
 
@@ -207,13 +225,13 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.lt(DOUBLE, "X", DOUBLE);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (2.0) should be less than 2.0", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (2.0) should be less than 2.0.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.lt(DOUBLE_GREATER, "X", DOUBLE);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (3.0) should be less than 2.0", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (3.0) should be less than 2.0.", e.getMessage());
     }
   }
 
@@ -228,13 +246,13 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.lt(INTEGER, "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (2) should be less than 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (2) should be less than 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.lt(INTEGER_GREATER, "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (3) should be less than 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (3) should be less than 2.", e.getMessage());
     }
   }
 
@@ -249,13 +267,13 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.lt(LONG, "X", LONG);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (2) should be less than 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (2) should be less than 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.lt(LONG_GREATER, "X", LONG);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (3) should be less than 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (3) should be less than 2.", e.getMessage());
     }
   }
 
@@ -275,7 +293,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.maxLength("aaa", "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (aaa) length should be less than or equal to 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (aaa) length should be less than or equal to 2.", e.getMessage());
     }
   }
 
@@ -285,7 +303,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.minLength("a", "X", INTEGER);
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (a) length should be greater than or equal to 2", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (a) length should be greater than or equal to 2.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.minLength("aa", "X", INTEGER);
@@ -305,7 +323,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.notNull(null, "X");
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX should not be null", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX is null.", e.getMessage());
     }
     try {
       Checks.ARGUMENT.notNull("x", "X");
@@ -320,7 +338,7 @@ public class ArgumentCheckTest {
       Checks.ARGUMENT.matches("z", "X", "[abc]");
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX (z) pattern should match [abc]", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (z) pattern should match [abc].", e.getMessage());
     }
     try {
       Checks.ARGUMENT.matches("b", "X", "[abc]");
@@ -332,16 +350,16 @@ public class ArgumentCheckTest {
   @Test
   public void testUnexpected() {
     try {
-      Checks.ARGUMENT.unexpected(null, "X");
+      Checks.ARGUMENT.invalid(null, "X");
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX null is unexpected", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (null) is invalid.", e.getMessage());
     }
     try {
-      Checks.ARGUMENT.unexpected("x", "X");
+      Checks.ARGUMENT.invalid("x", "X");
       Assert.fail("exception expected");
     } catch (final Exception e) {
-      Assert.assertEquals("Illegal argument.\nX x is unexpected", e.getMessage());
+      Assert.assertEquals("Illegal argument.\nX (x) is invalid.", e.getMessage());
     }
   }
 }

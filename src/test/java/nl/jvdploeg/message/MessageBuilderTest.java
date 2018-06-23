@@ -8,7 +8,7 @@ public class MessageBuilderTest {
   @Test
   public void testBuild() {
     // given
-    final MessageBuilder builder = new MessageBuilder("key");
+    final MessageBuilder builder = new MessageBuilder(new MessageDefinition("key"));
     // when
     final Message message = builder.build();
     // then
@@ -20,7 +20,7 @@ public class MessageBuilderTest {
   @Test
   public void testBuildWithArguments() {
     // given
-    final MessageBuilder builder = new MessageBuilder("key");
+    final MessageBuilder builder = new MessageBuilder(new MessageDefinition("key", "arg1", "arg2"));
     builder.add("arg1", "value1");
     builder.add("arg2", "value2");
     // when

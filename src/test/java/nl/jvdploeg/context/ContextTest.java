@@ -22,7 +22,7 @@ public class ContextTest {
     Assert.assertSame(context.getContent(), Context.get(TestContext.class));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = IllegalStateException.class)
   public void testExit() {
     // given
     final TestContext context = new TestContext();
@@ -74,7 +74,7 @@ public class ContextTest {
     Assert.fail("exception expected");
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = IllegalStateException.class)
   public void testNone() {
     // given
     // when

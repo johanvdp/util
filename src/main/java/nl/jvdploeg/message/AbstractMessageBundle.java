@@ -12,44 +12,35 @@ import nl.jvdploeg.object.NullSafe;
 import nl.jvdploeg.regex.Regex;
 
 /**
- * Message bundle containing translatable messages.<br>
- * <b>Example</b><br>
- * Message format:
- *
- * <pre>
- * color.green=green
- * Text with [propertyColor] and {doorNumber} and literally [[x]], {{y}}=Text with [propertyColor] and {doorNumber} and literally [[x]], {{y}}.
- * </pre>
- *
- * Message:
- *
- * <pre>
- * key=Text with [propertyColor] and {doorNumber} and literally [[x]], {{y}}
- * arguments=[propertyColor=color.green, doorNumber=2]
- * </pre>
- *
- * <pre>
- * key=Power range '{powerRange}'.
- * arguments=[powerRange=[1-10]]
- * </pre>
- *
- * Translate message result:
- *
- * <pre>
- * Text with green and 2 and letterlijk [x], {y}.
- * </pre>
- *
- * <pre>
- * Power range [1-10].
- * </pre>
+ * Message bundle performs {@link Message} translation.
  */
-
 public abstract class AbstractMessageBundle implements MessageBundle {
 
   private static final class Argument {
 
+    /**
+     * Create argument from definition.<br>
+     * Format: &lt;name&gt;[,&lt;format&gt;]<br>
+     * Example: count<br>
+     * Example: weight,%4.2f
+     */
+    public static Argument create(final String definition) {
+      final int indexOfSeparator = definition.indexOf(",");
+      final String argumentName;
+      final String argumentFormat;
+      if (indexOfSeparator == -1) {
+        argumentName = definition;
+        argumentFormat = null;
+      } else {
+        argumentName = definition.substring(0, indexOfSeparator);
+        argumentFormat = definition.substring(indexOfSeparator + 1);
+      }
+      return new Argument(definition, argumentName, argumentFormat);
+    }
+
     private final String definition;
     private final String key;
+
     private final String format;
 
     private Argument(final String definition, final String key, final String format) {
@@ -182,23 +173,17 @@ public abstract class AbstractMessageBundle implements MessageBundle {
     final String messageKey = message.getKey();
     final Map<String, Object> messageArgumentValues = message.getArguments();
     // start translating
-    String intermediate = getString(messageKey);
+    String intermediate = getString(message);
     // lookup arguments
-    final List<String> argumentDefinitions = find(ARGUMENT_PATTERN, intermediate);
-    final List<Argument> arguments = createArguments(argumentDefinitions);
+    final List<Argument> arguments = findArguments(intermediate);
     if (arguments.size() > 0) {
       for (final Argument argument : arguments) {
         final Object argumentValue = messageArgumentValues.get(argument.key);
         if (argumentValue == null) {
-          throw new IllegalStateException("message missing argument value, message:" + messageKey + ", argument:" + argument);
+          throw new IllegalStateException(String.format("message missing argument value, message: %s, argument: %s", messageKey, argument.key));
         }
-        final String formattedArgumentValue;
-        if (argument.format == null) {
-          formattedArgumentValue = NullSafe.toString(argumentValue);
-        } else {
-          final Locale locale = getLocale();
-          formattedArgumentValue = String.format(locale, argument.format, argumentValue);
-        }
+        // format argument value
+        final String formattedArgumentValue = format(argument, argumentValue);
         intermediate = replaceAll(intermediate, argumentPattern(argument.definition), formattedArgumentValue);
       }
     }
@@ -223,24 +208,41 @@ public abstract class AbstractMessageBundle implements MessageBundle {
   private List<Argument> createArguments(final List<String> argumentDefinitions) {
     final List<Argument> arguments = new ArrayList<>();
     for (final String argumentDefinition : argumentDefinitions) {
-      final int indexOfSeparator = argumentDefinition.indexOf(",");
-      final String argumentName;
-      final String argumentFormat;
-      if (indexOfSeparator == -1) {
-        argumentName = argumentDefinition;
-        argumentFormat = null;
-      } else {
-        argumentName = argumentDefinition.substring(0, indexOfSeparator);
-        argumentFormat = argumentDefinition.substring(indexOfSeparator + 1);
-      }
-      arguments.add(new Argument(argumentDefinition, argumentName, argumentFormat));
+      arguments.add(Argument.create(argumentDefinition));
     }
     return arguments;
   }
 
-  /** Get a string value in this message bundle. */
-  protected abstract String getString(String key);
+  private List<Argument> findArguments(final String message) {
+    final List<String> definitions = find(ARGUMENT_PATTERN, message);
+    final List<Argument> arguments = createArguments(definitions);
+    return arguments;
+  }
+
+  private String format(final Argument argument, final Object value) {
+    if (argument.format == null) {
+      return NullSafe.toString(value);
+    }
+    final Locale locale = getLocale();
+    return String.format(locale, argument.format, value);
+  }
 
   /** Get the locale of this message bundle. */
   protected abstract Locale getLocale();
+
+  /**
+   * Get a string value in this message bundle.
+   *
+   * @param message
+   *          The message to lookup.
+   */
+  protected abstract String getString(Message message);
+
+  /**
+   * Get a string value in this message bundle.
+   *
+   * @param key
+   *          The key to lookup.
+   */
+  protected abstract String getString(String key);
 }

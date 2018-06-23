@@ -25,38 +25,43 @@ public class ResourceMessageBundleTest {
 
   @Test
   public void testTextWithLitterals() {
-    final Message message = new MessageBuilder("property.[propertyColor].door.{doorNumber}.literal.[[x]].{{y}}") //
-        .add("propertyColor", "color.green") //
-        .add("doorNumber", 2) //
-        .build();
+    final Message message = new MessageBuilder(
+        new MessageDefinition("property.[propertyColor].door.{doorNumber}.literal.[[x]].{{y}}", "propertyColor", "doorNumber")) //
+            .add("propertyColor", "color.green") //
+            .add("doorNumber", 2) //
+            .build();
     final String translation = messageBundle.translate(message);
     Assert.assertEquals("Tekst met groen en 2 en letterlijk [x], {y}.", translation);
   }
 
   @Test
   public void testWithArgumentIndirection() {
-    final Message message = new MessageBuilder("the.color.door").add("propertyColor", "color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("the.color.door", "propertyColor")) //
+        .add("propertyColor", "color.green") //
+        .build();
     final String translation = messageBundle.translate(message);
     Assert.assertEquals("De groen deur.", translation);
   }
 
   @Test
   public void testWithArgumentValue() {
-    final Message message = new MessageBuilder("open.door.number").add("doorNumber", "2").build();
+    final Message message = new MessageBuilder(new MessageDefinition("open.door.number", "doorNumber")) //
+        .add("doorNumber", "2") //
+        .build();
     final String translation = messageBundle.translate(message);
     Assert.assertEquals("Open deur nummer 2.", translation);
   }
 
   @Test
   public void testWithoutArguments() {
-    final Message message = new MessageBuilder("color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("color.green")).build();
     final String translation = messageBundle.translate(message);
     Assert.assertEquals("groen", translation);
   }
 
   @Test
   public void testTextWithFormat() {
-    final Message message = new MessageBuilder("product.weight {weight}") //
+    final Message message = new MessageBuilder(new MessageDefinition("product.weight {weight}", "weight")) //
         .add("weight", 2.3456d) //
         .build();
     final String translation = messageBundle.translate(message);

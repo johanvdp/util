@@ -3,8 +3,12 @@ package nl.jvdploeg.exception;
 
 import nl.jvdploeg.message.Message;
 import nl.jvdploeg.message.MessageBuilder;
+import nl.jvdploeg.message.MessageDefinition;
 
 public class StateCheck extends LimitCheck {
+
+  private static final MessageDefinition SENTENCE_ILLEGAL_STATE = new MessageDefinition("illegal.state");
+  private static final Message MESSAGE_ILLEGAL_STATE = new MessageBuilder(SENTENCE_ILLEGAL_STATE).build();
 
   public StateCheck() {
     super();
@@ -12,7 +16,6 @@ public class StateCheck extends LimitCheck {
 
   @Override
   protected final void consequence(final Message message) {
-    final Message illegalStateMessage = new MessageBuilder("Illegal state.").build();
-    throw new MessageException(illegalStateMessage, message);
+    throw new MessageException(MESSAGE_ILLEGAL_STATE, message);
   }
 }

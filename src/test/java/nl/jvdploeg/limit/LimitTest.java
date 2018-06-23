@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import nl.jvdploeg.message.Message;
-import nl.jvdploeg.message.MessageBuilder;
 import nl.jvdploeg.message.MessageBundleContext;
+import nl.jvdploeg.message.MessageDefinition;
 
 public class LimitTest {
 
@@ -18,13 +18,13 @@ public class LimitTest {
   @Before
   public void before() {
     final Predicate<String> predicate = t -> t.length() > 3;
-    final Message message = new MessageBuilder("{name} {value} {limit}").build();
-    limit = new Limit<>("name", Integer.valueOf(3), predicate, message);
+    final MessageDefinition definition = new MessageDefinition("limit.check.minlength", "name", "value", "limit");
+    limit = new Limit<>("name", Integer.valueOf(3), predicate, definition);
   }
 
   @Test
   public void testPredicateFalse() {
-    Assert.assertEquals("name aaa 3", toString(limit.check("aaa")));
+    Assert.assertEquals("limit.check.minlength: name=name, limit=3, value=aaa", toString(limit.check("aaa")));
   }
 
   @Test

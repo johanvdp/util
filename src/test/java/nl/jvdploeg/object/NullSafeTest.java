@@ -31,7 +31,7 @@ public class NullSafeTest {
   @Test
   public void testFunction() {
     Assert.assertEquals("input", NullSafe.function("input", f -> f));
-    Assert.assertEquals(null, NullSafe.function(null, f -> f));
+    Assert.assertNull(NullSafe.function(null, f -> f));
   }
 
   @Test

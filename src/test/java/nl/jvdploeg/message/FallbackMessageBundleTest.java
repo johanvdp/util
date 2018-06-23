@@ -15,39 +15,45 @@ public class FallbackMessageBundleTest {
 
   @Test
   public void testTextWithLitterals() {
-    final Message message = new MessageBuilder("Text with [propertyColor] and {doorNumber} and literally [[x]], {{y}}")
-        .add("propertyColor", "color.green").add("doorNumber", "2").build();
+    final Message message = new MessageBuilder(new MessageDefinition("litteral.[[x]].{{y}}", "propertyColor", "doorNumber")) //
+        .add("propertyColor", "color.green") //
+        .add("doorNumber", "2") //
+        .build();
     final String translation = bundle.translate(message);
-    Assert.assertEquals("Text with color.green and 2 and literally [x], {y}", translation);
+    Assert.assertEquals("litteral.[x].{y}: doorNumber=2, propertyColor=color.green", translation);
   }
 
   @Test
   public void testWithArgumentIndirection() {
-    final Message message = new MessageBuilder("the.color.door").add("propertyColor", "color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("the.color.door", "propertyColor")) //
+        .add("propertyColor", "color.green") //
+        .build();
     final String translation = bundle.translate(message);
-    Assert.assertEquals("the.color.door", translation);
+    Assert.assertEquals("the.color.door: propertyColor=color.green", translation);
   }
 
   @Test
   public void testWithArgumentValue() {
-    final Message message = new MessageBuilder("open.door.number").add("doorNumber", "2").build();
+    final Message message = new MessageBuilder(new MessageDefinition("open.door.number", "doorNumber")) //
+        .add("doorNumber", "2") //
+        .build();
     final String translation = bundle.translate(message);
-    Assert.assertEquals("open.door.number", translation);
+    Assert.assertEquals("open.door.number: doorNumber=2", translation);
   }
 
   @Test
   public void testWithoutArguments() {
-    final Message message = new MessageBuilder("color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("color.green")).build();
     final String translation = bundle.translate(message);
     Assert.assertEquals("color.green", translation);
   }
 
   @Test
   public void testTextWithFormat() {
-    final Message message = new MessageBuilder("product.weight {weight}") //
+    final Message message = new MessageBuilder(new MessageDefinition("product.weight", "weight")) //
         .add("weight", 2.3456d) //
         .build();
     final String translation = bundle.translate(message);
-    Assert.assertEquals("product.weight 2.3456", translation);
+    Assert.assertEquals("product.weight: weight=2.3456", translation);
   }
 }

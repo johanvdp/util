@@ -1,7 +1,6 @@
 package nl.jvdploeg.message;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,22 +8,18 @@ import org.junit.Test;
 
 public class MessageBundleContextTest {
 
-  private ResourceBundle resourceBundle;
-  private MessageBundle messageBundle;
-
   @Before
   public void before() {
-    resourceBundle = ResourceBundle.getBundle("nl.jvdploeg.message.TestBundle", new Locale("nl"));
-    messageBundle = new ResourceMessageBundle(resourceBundle);
+    Locale.setDefault(new Locale("nl"));
   }
 
   @Test
   public void testInContext_Instance() {
     // given
     // in context
-    final MessageBundleContext context = new MessageBundleContext(messageBundle);
+    final MessageBundleContext context = new MessageBundleContext(TestBundle.class);
     context.enter();
-    final Message message = new MessageBuilder("color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("color.green")).build();
     // when / then
     Assert.assertEquals("groen", context.translate(message));
     // cleanup
@@ -35,8 +30,8 @@ public class MessageBundleContextTest {
   public void testNoContext_Instance() {
     // given
     // in context
-    final MessageBundleContext context = new MessageBundleContext(messageBundle);
-    final Message message = new MessageBuilder("color.green").build();
+    final MessageBundleContext context = new MessageBundleContext(TestBundle.class);
+    final Message message = new MessageBuilder(new MessageDefinition("color.green")).build();
     // when / then
     Assert.assertEquals("groen", context.translate(message));
   }
@@ -45,9 +40,9 @@ public class MessageBundleContextTest {
   public void testInContext_Static() {
     // given
     // in context
-    final MessageBundleContext context = new MessageBundleContext(messageBundle);
+    final MessageBundleContext context = new MessageBundleContext(TestBundle.class);
     context.enter();
-    final Message message = new MessageBuilder("color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("color.green")).build();
     // when / then
     Assert.assertEquals("groen", MessageBundleContext.aware(message));
     // cleanup
@@ -57,7 +52,7 @@ public class MessageBundleContextTest {
   @Test
   public void testNoContext_Static() {
     // given
-    final Message message = new MessageBuilder("color.green").build();
+    final Message message = new MessageBuilder(new MessageDefinition("color.green")).build();
     // when / then
     Assert.assertEquals("color.green", MessageBundleContext.aware(message));
   }

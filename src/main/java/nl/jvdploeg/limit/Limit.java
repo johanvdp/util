@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import nl.jvdploeg.message.Message;
 import nl.jvdploeg.message.MessageBuilder;
+import nl.jvdploeg.message.MessageDefinition;
 import nl.jvdploeg.object.NullSafe;
 
 /**
@@ -19,7 +20,7 @@ public final class Limit<VALUE, LIMIT> {
 
   private final LIMIT limit;
   private final Predicate<VALUE> predicate;
-  private final Message message;
+  private final MessageDefinition definition;
   private final String name;
 
   /**
@@ -31,7 +32,7 @@ public final class Limit<VALUE, LIMIT> {
    *          argument limit
    * @param predicate
    *          argument check function
-   * @param message
+   * @param definition
    *          message describing the failing limit check.<br>
    *          parameters:
    *          <ul>
@@ -40,11 +41,11 @@ public final class Limit<VALUE, LIMIT> {
    *          <li>{limit}: limit</li>
    *          </ul>
    */
-  public Limit(final String name, final LIMIT limit, final Predicate<VALUE> predicate, final Message message) {
+  public Limit(final String name, final LIMIT limit, final Predicate<VALUE> predicate, final MessageDefinition definition) {
     this.name = name;
     this.limit = limit;
     this.predicate = predicate;
-    this.message = message;
+    this.definition = definition;
   }
 
   /**
@@ -54,12 +55,12 @@ public final class Limit<VALUE, LIMIT> {
    */
   public Message check(final VALUE value) {
     if (!predicate.test(value)) {
-      final Message result = new MessageBuilder(message.getKey()) //
+      final Message message = new MessageBuilder(definition) //
           .add("name", name) //
           .add("value", NullSafe.toString(value)) //
           .add("limit", NullSafe.toString(limit)) //
           .build();
-      return result;
+      return message;
     }
     return null;
   }
