@@ -1,19 +1,24 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
+import java.util.function.Consumer;
+
 import nl.jvdploeg.limit.Limits;
 import nl.jvdploeg.message.Message;
 import nl.jvdploeg.message.MessageBuilder;
 import nl.jvdploeg.message.MessageDefinition;
 import nl.jvdploeg.object.NullSafe;
 
-public abstract class LimitCheck {
+public class LimitCheck {
 
   private static final MessageDefinition SENTENCE_OBJECT_NULL = new MessageDefinition("object.null", "name");
   private static final MessageDefinition SENTENCE_OBJECT_INVALID = new MessageDefinition("object.invalid", "name", "value");
   private static final MessageDefinition SENTENCE_OBJECT_MISSING = new MessageDefinition("object.missing", "name", "value");
 
-  protected LimitCheck() {
+  private final Consumer<Message> consequence;
+
+  public LimitCheck(final Consumer<Message> consequence) {
+    this.consequence = consequence;
   }
 
   public final void ge(final Double value, final String name, final Double limit) {
@@ -45,7 +50,7 @@ public abstract class LimitCheck {
         .add("name", name) //
         .add("value", NullSafe.toString(value)) //
         .build();
-    consequence(message);
+    consequence.accept(message);
   }
 
   public final void le(final Double value, final String name, final Double limit) {
@@ -89,7 +94,7 @@ public abstract class LimitCheck {
         .add("name", name) //
         .add("value", NullSafe.toString(value)) //
         .build();
-    consequence(message);
+    consequence.accept(message);
   }
 
   public final void notNull(final Object value, final String name) {
@@ -97,15 +102,13 @@ public abstract class LimitCheck {
       final Message message = new MessageBuilder(SENTENCE_OBJECT_NULL) //
           .add("name", name) //
           .build();
-      consequence(message);
+      consequence.accept(message);
     }
   }
 
-  protected final void check(final Message message) {
+  private void check(final Message message) {
     if (message != null) {
-      consequence(message);
+      consequence.accept(message);
     }
   }
-
-  protected abstract void consequence(Message message);
 }

@@ -1,15 +1,15 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
-public final class ArgumentCheckTest extends AbstractLimitCheckTest {
+public final class StateCheckTest extends AbstractLimitCheckTest {
 
   @Override
   protected LimitCheck createCheck() {
-    return Checks.ARGUMENT;
+    return Checks.STATE;
   }
 
   @Override
   protected String getCheckSpecificMessage() {
-    return "Illegal argument.";
+    return "Illegal state.";
   }
 }
