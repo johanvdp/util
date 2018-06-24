@@ -1,26 +1,49 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.exception;
 
+import java.util.function.BiFunction;
+
 import nl.jvdploeg.object.Instance;
 
 /**
  * Build exception combining method, messages, values, and cause when available.
  */
-public abstract class ThrowableBuilder<T extends Throwable> {
+public class ThrowableBuilder<T extends Throwable> {
 
+  private static final BiFunction<String, Throwable, RuntimeException> RUNTIME_EXCEPTION_FACTORY = //
+      (msg, cause) -> new RuntimeException(msg, cause);
+  private static final BiFunction<String, Throwable, IllegalArgumentException> ILLEGAL_ARGUMENT_EXCEPTION_FACTORY = //
+      (msg, cause) -> new IllegalArgumentException(msg, cause);
+  private static final BiFunction<String, Throwable, IllegalStateException> ILLEGAL_STATE_EXCEPTION_FACTORY = //
+      (msg, cause) -> new IllegalStateException(msg, cause);
+
+  public static ThrowableBuilder<IllegalArgumentException> createIllegalArgumentExceptionBuilder() {
+    return new ThrowableBuilder<>(ILLEGAL_ARGUMENT_EXCEPTION_FACTORY);
+  }
+
+  public static ThrowableBuilder<IllegalStateException> createIllegalStateExceptionBuilder() {
+    return new ThrowableBuilder<>(ILLEGAL_STATE_EXCEPTION_FACTORY);
+  }
+
+  public static ThrowableBuilder<RuntimeException> createRuntimeExceptionBuilder() {
+    return new ThrowableBuilder<>(RUNTIME_EXCEPTION_FACTORY);
+  }
+
+  private final BiFunction<String, Throwable, T> exceptionFactory;
   private final StringBuilder messages = new StringBuilder();
   private final StringBuilder values = new StringBuilder();
   private Throwable oneCause;
   private String oneMethod;
 
-  protected ThrowableBuilder() {
+  public ThrowableBuilder(final BiFunction<String, Throwable, T> exceptionFactory) {
+    this.exceptionFactory = exceptionFactory;
   }
 
   /**
    * Build exception combining method, messages, values, and cause when
    * available.
    */
-  public final T build() {
+  public T build() {
 
     final StringBuilder message = new StringBuilder();
     if (oneMethod != null) {
@@ -38,11 +61,9 @@ public abstract class ThrowableBuilder<T extends Throwable> {
       }
       message.append(values.toString());
     }
-    final T throwable = create(message.toString(), oneCause);
+    final T throwable = exceptionFactory.apply(message.toString(), oneCause);
     return throwable;
   }
-
-  protected abstract T create(String message, Throwable cause);
 
   public final ThrowableBuilder<T> cause(final Throwable cause) {
     oneCause = cause;

@@ -1,7 +1,7 @@
 // The author disclaims copyright to this source code.
 package nl.jvdploeg.context;
 
-import nl.jvdploeg.exception.IllegalStateExceptionBuilder;
+import nl.jvdploeg.exception.ThrowableBuilder;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class Context<T> {
@@ -32,7 +32,7 @@ public abstract class Context<T> {
   private static Context getContext(final Context inner, final Class target) {
     final Context context = findContext(inner, target);
     if (context == null) {
-      throw new IllegalStateExceptionBuilder() //
+      throw ThrowableBuilder.createIllegalStateExceptionBuilder() //
           .method("getContext") //
           .message("enclosing context type not found") //
           .field("thread", Thread.currentThread().getName()) //
@@ -51,7 +51,7 @@ public abstract class Context<T> {
   /** Enter context. Must be called from sub-classes when overridden. */
   public void enter() {
     if (findContext(INNER.get(), getClass()) != null) {
-      throw new IllegalStateExceptionBuilder() //
+      throw ThrowableBuilder.createIllegalStateExceptionBuilder() //
           .method("enter") //
           .message("can not enter again") //
           .field("thread", Thread.currentThread().getName()) //
@@ -67,7 +67,7 @@ public abstract class Context<T> {
   public void exit() {
     final Context inner = INNER.get();
     if (inner == null) {
-      throw new IllegalStateExceptionBuilder() //
+      throw ThrowableBuilder.createIllegalStateExceptionBuilder() //
           .method("exit") //
           .message("no current context") //
           .field("thread", Thread.currentThread().getName()) //
@@ -75,7 +75,7 @@ public abstract class Context<T> {
           .build();
     }
     if (!inner.getClass().equals(getClass())) {
-      throw new IllegalStateExceptionBuilder() //
+      throw ThrowableBuilder.createIllegalStateExceptionBuilder() //
           .method("exit") //
           .message("can only exit from current context") //
           .field("thread", Thread.currentThread().getName()) //

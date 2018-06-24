@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import nl.jvdploeg.object.Instance;
 
-public class ErrorBuilderTest {
+public class ThrowableBuilderTest {
 
   private static final Throwable CAUSE1 = new Throwable();
   private static final Throwable CAUSE2 = new Throwable();
@@ -16,7 +16,7 @@ public class ErrorBuilderTest {
   @Test
   public void testAll() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     b.cause(CAUSE2);
     b.identity("object2", OBJECT2);
@@ -51,7 +51,7 @@ public class ErrorBuilderTest {
   @Test
   public void testCause() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     b.cause(CAUSE1);
     final RuntimeException e = b.build();
@@ -63,7 +63,7 @@ public class ErrorBuilderTest {
   @Test
   public void testEmpty() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     final RuntimeException e = b.build();
     // then
@@ -74,7 +74,7 @@ public class ErrorBuilderTest {
   @Test
   public void testField() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     b.field("fieldName", "fieldValue");
     final RuntimeException e = b.build();
@@ -86,7 +86,7 @@ public class ErrorBuilderTest {
   @Test
   public void testIdentity() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     b.identity("object1", OBJECT1);
     final RuntimeException e = b.build();
@@ -98,7 +98,7 @@ public class ErrorBuilderTest {
   @Test
   public void testMessage() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     b.message("message");
     final RuntimeException e = b.build();
@@ -110,7 +110,7 @@ public class ErrorBuilderTest {
   @Test
   public void testMethod() {
     // given
-    final ErrorBuilder b = new ErrorBuilder();
+    final ThrowableBuilder<RuntimeException> b = ThrowableBuilder.createRuntimeExceptionBuilder();
     // when
     b.method("methodName");
     final RuntimeException e = b.build();
